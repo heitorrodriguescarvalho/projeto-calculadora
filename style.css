@@ -1,0 +1,102 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap');
+
+
+* {
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    text-decoration: none;
+}
+
+body {
+    background-color: #2B2B2B;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+
+#page {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+}
+
+#container {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    min-height: 206px;
+    max-height: 35vh;
+}
+
+#page #display-text {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-wrap: wrap;
+    flex-basis: 65%;
+    overflow: auto;
+}
+
+#page #display-text p {
+    width: 92vw;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    margin-bottom: 2vh;
+    margin-right: 5vw;
+    margin-left: 3vw;
+    font-size: 1.7em;
+    font-weight: 300;
+    text-align: end;
+    color: #EEEEEE;
+}
+
+#page #display-text div {
+    height: 1px;
+    margin-left: 10px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.295);
+}
+
+#buttons {
+    display: flex;
+    flex-direction: row;
+    min-width: 100vw;
+    background-color: #4A4A4A;
+    box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.15);
+}
+
+#calc-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-basis: 75%;
+}
+
+#calc-buttons .btn {
+    flex-basis: 33.3%;
+    background-color: #333333;
+}
+
+#calc-buttons-operation {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    flex-basis: 25%;
+    box-shadow: -5px 0px 10px rgba(0, 0, 0, 0.12);
+}
+
+#calc-buttons-operation .btn {
+    flex-basis: 20%;
+    background-color: #4A4A4A;
+}
+
+.btn {
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    font-size: 1.2em;
+    font-weight: 400;
+    color: #EEEEEE;
+}
