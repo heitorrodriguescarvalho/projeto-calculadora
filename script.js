@@ -1,230 +1,178 @@
-const nums = ['']
-let operacao = null
-let lastOp = false
+const screen = document.querySelector(".screen");
+const screenContent = document.querySelector(".screen-content");
 
-const visorDiv = document.querySelector('#display-text')
-const visor = document.querySelector('#text')
+const data = {
+	numbers: {
+		n1: "0",
+		n2: "0",
+	},
+	currentOperation: null,
+	result: null,
+	operations: {
+		somar: { operation: (n1, n2) => n1 + n2, symbol: "+" },
+		subtrair: { operation: (n1, n2) => n1 - n2, symbol: "-" },
+		multiplicar: { operation: (n1, n2) => n1 * n2, symbol: "×" },
+		dividir: { operation: (n1, n2) => n1 / n2, symbol: "÷" },
+	},
+	actions: {
+		limpar: () => {
+			for (const number in data.numbers) {
+				data.numbers[number] = "0";
+			}
+			data.currentOperation = null;
+			data.result = null;
 
-function num(n) {
-    if (lastOp) {
-        novoParagrafo()
-        limpar()
-        lastOp = false
-    }
-    if (n != '.' || nums[nums.length - 1].indexOf('.') === -1 && nums[nums.length - 1].length > 1) {
-        if (nums[nums.length -1].length <= 20) {
-            nums[nums.length -1] += n
-        }
-    } else {
-        nums[nums.length -1] += '0.'
-    }
-    atualizar()
+			let paragraphs = document.querySelector(".paragraph-content");
+			while (paragraphs) {
+				paragraphs.parentNode.removeChild(paragraphs);
+				paragraphs = document.querySelector(".paragraph-content");
+			}
 
-    console.log(nums)
-    console.log(operacao)
-}
+			updateScreen()
+		},
+		excluir: () => {
+			if (!data.currentOperation && data.numbers.n1 > 0) {
+				data.numbers.n1 = data.numbers.n1.substring(
+					0,
+					data.numbers.n1.length - 1
+				);
 
-function operation(op) {
-    if (nums.length > 1) {
-        igual()
-    }
-    if (nums.length === 1 && nums[0] === '' && op === '+') {
-        nums[0] = '+'
-    } else if (nums.length === 1 && nums[0] === '' && op === '-') {
-        nums[0] = '-'
-    } else {
-        operacao = op
-        novoParagrafo()
-        nums.push('')
-    }
+				if (data.numbers.n1.length === 0) {
+					data.numbers.n1 = "0";
+				}
+			} else if (data.currentOperation && data.numbers.n2.length === 0) {
+				data.currentOperation = null;
+			} else if (data.currentOperation && data.numbers.n2 > 0) {
+				data.numbers.n2 = data.numbers.n2.substring(
+					0,
+					data.numbers.n2.length - 1
+				);
+			}
+		},
+		igual: () => {
+			if (data.currentOperation) {
+				data.result = `${data.operations[
+					data.currentOperation
+				].operation(
+					parseFloat(data.numbers.n1),
+					parseFloat(data.numbers.n2)
+				)}`;
 
-    atualizar()
-    lastOp  = false
+				data.numbers.n1 = data.result;
 
-    console.log(nums)
-    console.log(operacao)
-}
+				newParagraph(
+					data.numbers.n2,
+					data.operations[data.currentOperation].symbol,
+					true
+				);
 
-function pi() {
-    nums[nums.length -1] = '3.14159265359'
-    atualizar()
-}
+				data.numbers.n2 = "0";
+				data.currentOperation = null;
+			}
+		},
+	},
+};
 
-function igual() {
-    if (nums[0] != '' && nums[1] != '' && operacao != null) {
-        console.log('executado')
+const handleClick = (input) => {
+	if (isFinite(input) && data.result) {
+		newParagraph(data.result);
+		data.result = null;
+		data.numbers.n1 = "0";
+	}
 
-        novoParagrafo()
-        switch(operacao) {
-            case '+':
-                nums.push(`${parseFloat(nums[0]) + parseFloat(nums[1])}`)
-                break
+	if (/[\d.]/.test(input)) {
+		setNumbers(input);
+	} else if (data.operations[input]) {
+		setCurrentOperation(input);
+	} else if (data.actions[input]) {
+		data.actions[input]();
+	}
+	console.log(data.result);
 
-            case '-':
-                nums.push(`${parseFloat(nums[0]) - parseFloat(nums[1])}`)
-                break
+	updateScreen();
 
-            case '×':
-                nums.push(`${parseFloat(nums[0]) * parseFloat(nums[1])}`)
-                break
+	console.log(data.numbers.n1, data.numbers.n2, data.currentOperation);
+};
 
-            case '÷':
-                nums.push(`${parseFloat(nums[0]) / parseFloat(nums[1])}`)
-                break
+const setNumbers = (number) => {
+	if (!data.currentOperation) {
+		if (
+			(number === "." && !data.numbers.n1.includes(".")) ||
+			number != "."
+		) {
+			data.numbers.n1 += number;
+		}
+	} else {
+		if (
+			(number === "." && !data.numbers.n2.includes(".")) ||
+			number != "."
+		) {
+			data.numbers.n2 += number;
+		}
+	}
+};
 
-            case 'yⁿ':
-                nums.push(`${parseFloat(nums[0]) ** parseFloat(nums[1])}`)
-                break
+const setCurrentOperation = (operation) => {
+	if (!data.currentOperation && data.numbers.n2.length === 0) {
+		data.currentOperation = operation;
+	} else {
+		data.actions.igual();
+		data.currentOperation = operation;
+	}
 
-            case 'ⁿ√Y':
-                nums.push(`${Math.pow(parseFloat(nums[0]), parseFloat(nums[1]))}`)
-                break
-        }
-        console.log(nums)
+	data.result = null;
 
-        nums.splice(0, 2)
-        lastOp = true
+	newParagraph(data.numbers.n1);
+};
 
-    } else if (nums.length > 1) {
-        nums.splice(1)
-    }
-    operacao = null
+const updateScreen = () => {
+	formatNumbers();
 
-    atualizar()
+	if (!data.currentOperation) {
+		if (data.result) {
+			screen.value = data.result;
+		} else {
+			screen.value = data.numbers.n1;
+		}
+	} else {
+		screen.value =
+			data.operations[data.currentOperation].symbol + data.numbers.n2;
+	}
+};
 
-    console.log(nums)
-    console.log(operacao)
-}
+const formatNumbers = () => {
+	for (let number in data.numbers) {
+		if (
+			data.numbers[number][0] === "0" &&
+			data.numbers[number][1] != "." &&
+			data.numbers[number].length > 1
+		) {
+			data.numbers[number] = data.numbers[number].substring(
+				1,
+				data.numbers[number].length
+			);
+		}
 
-function fatorial() {
-    if (nums.length === 2) {
-        if (nums[1] === '') {
-            nums[1] = '0'
-        }
-        igual()  
-        novoParagrafo()
-    }
-    if (nums[nums.length -1] != '') {
-        let num = parseFloat(nums[nums.length -1])
-        console.log(num)
-        let total = num
-        for (let i = num - 1; i > 1; i--) {
-            total *= i
-            console.log(total)
-        }
-        nums[nums.length -1] = `${total}`
-        operacao = null
-        console.log(nums)
-        atualizar()
-    }
-}
+		if (isNaN(data.numbers[number])) {
+			data.numbers[number] = "0";
+		}
+	}
+};
 
-function atualizar() {
-    console.log(nums)
-    console.log(operacao)
+const newParagraph = (number, symbol = null, insertLine = false) => {
+	const paragraph = document.createElement("div");
+	paragraph.setAttribute("class", "paragraph-content");
+	if (insertLine) {
+		paragraph.setAttribute("style", "border-bottom: 1px solid white;");
+	}
+	paragraph.innerHTML = ``;
 
-    if (nums.length === 1) {
-        visor.innerHTML = nums[0]
-    } else {
-        visor.innerHTML = `${operacao} ${nums[1]}`
-    }
-}
+	if (symbol) {
+		paragraph.innerHTML += `<p class="paragraph-symbol">${symbol}`;
+	}
+	paragraph.innerHTML += `<p class="paragraph-text">${number}</p>`;
 
-function insertAfter(newElement, reference) {
-    reference.parentNode.insertBefore(newElement, reference.nextSibling);
-}
+	screen.parentNode.insertBefore(paragraph, screen.nextSibling);
+};
 
-function novoParagrafo() {
-    if (nums.length === 1) {
-        let paragrafo = document.createElement("p")
-        paragrafo.setAttribute('class', 'result')
-        paragrafo.innerHTML = `${nums[0]}`
-        insertAfter(paragrafo, visor)
-    } else {
-        let paragrafo = document.createElement("p")
-        paragrafo.setAttribute('class', 'result')
-        paragrafo.innerHTML = `${operacao} ${nums[1]}`
-        insertAfter(paragrafo, visor)
-
-        let linha = document.createElement('div')
-        linha.setAttribute("class", "result")
-        insertAfter(linha, visor)
-    }
-}
-
-function limpar() {
-    nums.splice(0)
-    nums.push('')
-    operacao = null
-    let linhas = document.getElementsByClassName("result");
-    for (let i = linhas.length - 1; i >= 0; i--)
-    {
-        linhas[i].remove()
-    }
-    atualizar()
-}
-
-function limparUltimo() {
-    if (nums.length === 1) {
-        if (nums[0] != '') {
-            nums[0] = nums[0].substring(0, nums[0].length - 1)
-        }
-    } else if (nums.length === 2) {
-        if (nums[1] === '') {
-            nums.splice(1)
-            operacao = null
-        } else {
-            nums[1] = nums[1].substring(0, nums[1].length -1)
-        }
-    }
-    atualizar()
-}
-
-window.addEventListener('keydown', function(event) {
-    let tecla = event.key.toLowerCase()
-    console.log(tecla)
-
-    if (!isNaN(tecla)) {
-        num(tecla)
-    }
-    switch(tecla) {
-        case '.':
-            num('.')
-            break
-
-        case '+':
-            operation('+')
-            break
-
-        case '-':
-            operation('-')
-            break
-        
-        case 'x':
-        case '*':
-            operation('×')
-            break
-
-        case '/':
-            operation('÷')
-            break
-
-        case 'p':
-            pi()
-            break
-
-        case '=':
-        case 'enter':
-            igual()
-            break
-
-        case 'backspace':
-            limparUltimo()
-            break
-
-        case 'a':
-        case 'c':
-            limpar()
-            break
-        }
-    })
+updateScreen();

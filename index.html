@@ -1,49 +1,135 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-</head>
-<body>
-    <div id="page">
-        <div id="display-text">
-            <p id="text"></p>
-        </div>
-        <div id="container">
-            <div id="buttons">
-                <div id="calc-buttons"> 
-                    <input type="button" id="7" class="btn" value="7" onclick="num('7')">
-                    <input type="button" id="8" class="btn" value="8" onclick="num('8')">
-                    <input type="button" id="9" class="btn" value="9" onclick="num('9')">
-                    <input type="button" id="4" class="btn" value="4" onclick="num('4')">
-                    <input type="button" id="5" class="btn" value="5" onclick="num('5')">
-                    <input type="button" id="6" class="btn" value="6" onclick="num('6')">
-                    <input type="button" id="1" class="btn" value="1" onclick="num('1')">
-                    <input type="button" id="2" class="btn" value="2" onclick="num('2')">
-                    <input type="button" id="3" class="btn" value="3" onclick="num('3')">
-                    <input type="button" id="." class="btn" value="." onclick="num('.')">
-                    <input type="button" id="0" class="btn" value="0" onclick="num('0')">
-                    <input type="button" id="" class="btn" value="=" onclick="igual()">
-                </div>
-                <div id="calc-buttons-operation">
-                    <input type="button" class="btn" value="AC" onclick="limpar()">
-                    <input type="button" class="btn" value="+" onclick="operation('+')">
-                    <input type="button" class="btn" value="-" onclick="operation('-')">
-                    <input type="button" class="btn" value="×" onclick="operation('×')"> 
-                    <input type="button" class="btn" value="÷" onclick="operation('÷')">
-                    <input type="button" class="btn" value="&#9003;" onclick="limparUltimo()">
-                    <input type="button" class="btn" value="π" onclick="pi()">
-                    <input type="button" class="btn" value="x!" onclick="fatorial()">
-                    <input type="button" class="btn" value="yⁿ" onclick="operation('yⁿ')">
-                    <input type="button" class="btn" value="ⁿ√Y" onclick="operation('ⁿ√Y')">
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
+<html lang="pt-bt">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="stylesheet"
+			href="style.css" />
+
+		<link
+			rel="shortcut icon"
+			href="./images/favicon.ico"
+			type="image/x-icon" />
+		<title>Calculadora</title>
+	</head>
+	<body>
+		<div class="calculator">
+			<div class="screen-content">
+				<div class="shadow"></div>
+				<input
+					type="text"
+					class="screen"
+					disabled />
+			</div>
+			<div class="buttons">
+				<div class="number-buttons">
+					<div class="number-button-row">
+						<button
+							class="button button-number"
+							onclick="handleClick('7')">
+							7
+						</button>
+						<button
+							class="button button-number"
+							onclick="handleClick('8')">
+							8
+						</button>
+						<button
+							class="button button-number"
+							onclick="handleClick('9')">
+							9
+						</button>
+					</div>
+					<div class="number-button-row">
+						<button
+							class="button button-number"
+							onclick="handleClick('4')">
+							4
+						</button>
+						<button
+							class="button button-number"
+							onclick="handleClick('5')">
+							5
+						</button>
+						<button
+							class="button button-number"
+							onclick="handleClick('6')">
+							6
+						</button>
+					</div>
+					<div class="number-button-row">
+						<button
+							class="button button-number"
+							onclick="handleClick('1')">
+							1
+						</button>
+						<button
+							class="button button-number"
+							onclick="handleClick('2')">
+							2
+						</button>
+						<button
+							class="button button-number"
+							onclick="handleClick('3')">
+							3
+						</button>
+					</div>
+					<div class="number-button-row">
+						<button
+							class="button button-number"
+							onclick="handleClick('.')">
+							.
+						</button>
+						<button
+							class="button button-number"
+							onclick="handleClick('0')">
+							0
+						</button>
+						<button
+							class="button button-number"
+							onclick="handleClick('igual')">
+							=
+						</button>
+					</div>
+				</div>
+				<div class="operation-button-column">
+					<button
+						class="button button-operation"
+						onclick="handleClick('limpar')">
+						AC
+					</button>
+					<button
+						class="button button-operation"
+						onclick="handleClick('excluir')">
+						&#9003;
+					</button>
+					<button
+						class="button button-operation"
+						onclick="handleClick('somar')">
+						+
+					</button>
+					<button
+						class="button button-operation"
+						&x
+						onclick="handleClick('subtrair')">
+						-
+					</button>
+					<button
+						class="button button-operation"
+						onclick="handleClick('multiplicar')">
+						×
+					</button>
+					<button
+						class="button button-operation"
+						onclick="handleClick('dividir')">
+						&divide;
+					</button>
+				</div>
+			</div>
+		</div>
+		<script src="script.js"></script>
+	</body>
 </html>
